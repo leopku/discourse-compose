@@ -1,4 +1,4 @@
-version: '2'
+version: '2.0'
 
 services:
 
@@ -6,31 +6,36 @@ services:
         image: redis:3.2-alpine
         volumes:
             - /etc/localtime:/etc/localtime:ro
-#            - /data/docker/postgres/discourse-demo:/var/lib/postgresql/data
-            - ./data/redis:/var/lib/redis:Z
+            - ./volumes/redis:/var/lib/redis:Z
 
-    postgres:
-        image: postgres:9.6-alpine
+    db:
+        image: postgres:9.6
         volumes: 
             - /etc/localtime:/etc/localtime:ro
-#            - /data/docker/postgres/discourse-demo:/var/lib/postgresql/data
-            - ./data/postgres:/var/lib/postgresql/data:Z
-        environment:
-            - POSTGRES_USER=discourse
-            - POSTGRES_PASSWORD=p4ssw0rd
+            - ./volumes/postgres:/var/lib/postgresql/data:Z
+        env_file:
+            - .env
+
+    mail:
+        image: mailhog/mailhog
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
+        ports:
+            - "8025:8025"
     
-    discourse:
+    app:
         build: app
         image: leopku/discourse:1.3.10-official
-        # image: discourse/discourse:1.3.10
-        # entrypoint: ./entrypoint.sh
-        depends_on:
-            - redis
-            - postgres
+        env_file:
+            - .env
+        volumes: 
+            - /etc/localtime:/etc/localtime:ro
+            - ./volumes/discourse/public:/var/www/discourse/public
+            - ./volumes/discourse/plugins:/var/www/discourse/plugins
         links:
-            - redis:redis
-            - postgres:postgres
-        # command: ["./wait-for-it.sh", "postgres:"]
-        expose:
-            - "80"
-            - "443"
+            - redis
+            - db
+            - mail
+        ports:
+            - "10080:3000"
+            - "10443:443"

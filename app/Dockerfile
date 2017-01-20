@@ -1,32 +1,49 @@
 # NAME: leopku/discourse
-# VERSION: official-1.3.10
+# VERSION: 1.3.10-official
 FROM discourse/base:1.3.10
 
 MAINTAINER leopku "https://twitter.com/leopku"
 
 ENV DISCOURSE_VERSION 1.7.1
-ENV GEM_SOURCE=${GEM_SOURCE:-https://mirrors.tuna.tsinghua.edu.cn/rubygems/}
+ENV GEM_SOURCE ${GEM_SOURCE:-https://mirrors.tuna.tsinghua.edu.cn/rubygems/}
 
-ARG DISCOURSE_GIT_REPO=https://git.coding.net/leopku/discourse.git
+ENV DISCOURSE_REDIS_HOST ${DISCOURSE_REDIS_HOST:-redis}
+ENV DISCOURSE_REDIS_PORT ${DISCOURSE_REDIS_PORT:-6379}
+ENV DISCOURSE_DB_HOST ${DISCOURSE_DB_HOST:-db}
+ENV DISCOURSE_DB_PORT ${DISCOURSE_DB_PORT:-5432}
+ENV DISCOURSE_SMTP_HOST ${DISCOURSE_SMTP_HOST:-mail}
+ENV DISCOURSE_SMTP_ADDRESS ${DISCOURSE_SMTP_ADDRESS:-mail}
+ENV DISCOURSE_SMTP_PORT ${DISCOURSE_SMTP_PORT:-1025}
+ENV DISCOURSE_SERVICE_USER ${DISCOURSE_SERVICE_USER:-discourse}
+ENV DISCOURSE_SERVICE_GROUP ${DISCOURSE_SERVICE_GROUP:-discourse}
 
-RUN	mkdir -p /var/www &&\
-	cd /var/www
-ADD discourse /var/www/discourse
+ENV DISCOURSE_GIT_REPO ${DISCOURSE_GIT_REPO:-https://git.coding.net/leopku/discourse.git}
 
-RUN useradd discourse -s /bin/bash -m -U &&\
+###
+# Uncomment next line for speed up
+###
+# ADD discourse /var/www/discourse
+
+ADD ./dockerize /usr/bin/
+
+RUN chmod +x /usr/bin/dockerize &&\
+	useradd ${DISCOURSE_SERVICE_USER} -s /bin/bash -m -U &&\
 	echo 'gem: --no-document' >> /etc/gemrc &&\
-	# git clone --single-branch --depth=1 --branch v${DISCOURSE_VERSION} ${DISCOURSE_GIT_REPO} &&\
-	chown -R discourse:discourse /var/www/discourse &&\
+	git clone --single-branch --depth=1 --branch v${DISCOURSE_VERSION} ${DISCOURSE_GIT_REPO} &&\
+	chown -R ${DISCOURSE_SERVICE_USER}:${DISCOURSE_SERVICE_GROUP} /var/www/discourse &&\
 	# sudo -u discourse gem source --add ${GEM_SOURCE} --remove https://rubygems.org/ &&\
 	# sudo -u discourse bundle config mirror.https://rubygems.org ${GEM_SOURCE} && \
-	sudo -u discourse sed -i "s#https://rubygems.org#${GEM_SOURCE}#" /var/www/discourse/Gemfile &&\
+	sudo -u ${DISCOURSE_SERVICE_USER} sed -i "s#https://rubygems.org#${GEM_SOURCE}#" /var/www/discourse/Gemfile &&\
 	cd /var/www/discourse &&\
 	sudo -u discourse bundle install --deployment \
 		--without test --without development &&\
 	find /var/www/discourse/vendor/bundle -name tmp -type d -exec rm -rf {} +
 
-COPY docker-entry.sh /
+ADD docker-entry.sh /docker-entry.sh
 RUN chmod +x /docker-entry.sh
+
+USER ${DISCOURSE_SERVICE_USER}
+WORKDIR /var/www/discourse
 
 ENTRYPOINT ["/docker-entry.sh"]
 
