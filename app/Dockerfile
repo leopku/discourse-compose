@@ -38,6 +38,8 @@ RUN chmod +x /usr/bin/dockerize &&\
     chmod +x /etc/service/nginx/run &&\
     chmod +x /etc/runit/3.d/01-nginx &&\
     chmod +x /docker-entry.sh &&\
+    touch /var/log/nginx/error.log &&\
+    chown -R www-data:www-data /var/log/nginx &&\
     rm -rf /etc/nginx/sites-enabled/default &&\
     useradd ${DISCOURSE_SERVICE_USER} -s /bin/bash -m -U &&\
     echo 'gem: --no-document' >> /etc/gemrc &&\
