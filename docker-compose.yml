@@ -12,7 +12,7 @@ services:
         image: postgres:9.6
         volumes: 
             - /etc/localtime:/etc/localtime:ro
-            - ./volumes/postgres:/var/lib/postgresql/data:Z
+            - ./volumes/postgres/data:/var/lib/postgresql/data:Z
         env_file:
             - .env
 
@@ -32,10 +32,8 @@ services:
             - /etc/localtime:/etc/localtime:ro
             - ./volumes/discourse/public:/var/www/discourse/public
             - ./volumes/discourse/plugins:/var/www/discourse/plugins
+            - ./volumes/nginx:/etc/nginx
         links:
             - redis
             - db
             - mail
-        ports:
-            - "10080:3000"
-            - "10443:443"

@@ -17,27 +17,28 @@ ENV DISCOURSE_SMTP_PORT ${DISCOURSE_SMTP_PORT:-1025}
 ENV DISCOURSE_SERVICE_USER ${DISCOURSE_SERVICE_USER:-discourse}
 ENV DISCOURSE_SERVICE_GROUP ${DISCOURSE_SERVICE_GROUP:-discourse}
 
+ENV DISCOURSE_SOURCE_PATH ${DISCOURSE_SOURCE_PATH:-"source/discourse"}
 ENV DISCOURSE_GIT_REPO ${DISCOURSE_GIT_REPO:-https://git.coding.net/leopku/discourse.git}
 
-###
+########
 # Uncomment next line for speed up
-###
-# ADD discourse /var/www/discourse
+########
+ADD ${DISCOURSE_SOURCE_PATH} /var/www/discourse
+# git clone --single-branch --depth=1 --branch v${DISCOURSE_VERSION} ${DISCOURSE_GIT_REPO}
 
 ADD ./dockerize /usr/bin/
 
 RUN chmod +x /usr/bin/dockerize &&\
-	useradd ${DISCOURSE_SERVICE_USER} -s /bin/bash -m -U &&\
-	echo 'gem: --no-document' >> /etc/gemrc &&\
-	git clone --single-branch --depth=1 --branch v${DISCOURSE_VERSION} ${DISCOURSE_GIT_REPO} &&\
-	chown -R ${DISCOURSE_SERVICE_USER}:${DISCOURSE_SERVICE_GROUP} /var/www/discourse &&\
-	# sudo -u discourse gem source --add ${GEM_SOURCE} --remove https://rubygems.org/ &&\
-	# sudo -u discourse bundle config mirror.https://rubygems.org ${GEM_SOURCE} && \
-	sudo -u ${DISCOURSE_SERVICE_USER} sed -i "s#https://rubygems.org#${GEM_SOURCE}#" /var/www/discourse/Gemfile &&\
-	cd /var/www/discourse &&\
-	sudo -u discourse bundle install --deployment \
-		--without test --without development &&\
-	find /var/www/discourse/vendor/bundle -name tmp -type d -exec rm -rf {} +
+    useradd ${DISCOURSE_SERVICE_USER} -s /bin/bash -m -U &&\
+    echo 'gem: --no-document' >> /etc/gemrc &&\
+    chown -R ${DISCOURSE_SERVICE_USER}:${DISCOURSE_SERVICE_GROUP} /var/www/discourse &&\
+    gem source --add ${GEM_SOURCE} --remove https://rubygems.org/ &&\
+    bundle config mirror.https://rubygems.org ${GEM_SOURCE} &&\
+    sudo -u ${DISCOURSE_SERVICE_USER} sed -i "s#https://rubygems.org#${GEM_SOURCE}#" /var/www/discourse/Gemfile &&\
+    cd /var/www/discourse &&\
+    sudo -u discourse bundle install --deployment \
+    --without test --without development &&\
+     find /var/www/discourse/vendor/bundle -name tmp -type d -exec rm -rf {} +
 
 ADD docker-entry.sh /docker-entry.sh
 RUN chmod +x /docker-entry.sh
