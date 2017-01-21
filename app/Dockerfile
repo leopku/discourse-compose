@@ -26,9 +26,19 @@ ENV DISCOURSE_GIT_REPO ${DISCOURSE_GIT_REPO:-https://git.coding.net/leopku/disco
 ADD ${DISCOURSE_SOURCE_PATH} /var/www/discourse
 # git clone --single-branch --depth=1 --branch v${DISCOURSE_VERSION} ${DISCOURSE_GIT_REPO}
 
+RUN mkdir -p /etc/service/nginx && \
+    mkdir -p /var/nginx/cache
+
 ADD ./dockerize /usr/bin/
+ADD ./nginx-run.sh /etc/service/nginx/run
+ADD ./01-nginx.sh /etc/runit/3.d/01-nginx
+ADD docker-entry.sh /docker-entry.sh
 
 RUN chmod +x /usr/bin/dockerize &&\
+    chmod +x /etc/service/nginx/run &&\
+    chmod +x /etc/runit/3.d/01-nginx &&\
+    chmod +x /docker-entry.sh &&\
+    rm -rf /etc/nginx/sites-enabled/default &&\
     useradd ${DISCOURSE_SERVICE_USER} -s /bin/bash -m -U &&\
     echo 'gem: --no-document' >> /etc/gemrc &&\
     chown -R ${DISCOURSE_SERVICE_USER}:${DISCOURSE_SERVICE_GROUP} /var/www/discourse &&\
@@ -38,10 +48,7 @@ RUN chmod +x /usr/bin/dockerize &&\
     cd /var/www/discourse &&\
     sudo -u discourse bundle install --deployment \
     --without test --without development &&\
-     find /var/www/discourse/vendor/bundle -name tmp -type d -exec rm -rf {} +
-
-ADD docker-entry.sh /docker-entry.sh
-RUN chmod +x /docker-entry.sh
+    find /var/www/discourse/vendor/bundle -name tmp -type d -exec rm -rf {} +
 
 USER ${DISCOURSE_SERVICE_USER}
 WORKDIR /var/www/discourse
