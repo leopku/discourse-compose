@@ -27,29 +27,34 @@ ADD ${DISCOURSE_SOURCE_PATH} /var/www/discourse
 # git clone --single-branch --depth=1 --branch v${DISCOURSE_VERSION} ${DISCOURSE_GIT_REPO}
 
 RUN mkdir -p /etc/service/nginx && \
+    mkdir -p /etc/service/unicorn && \
     mkdir -p /var/nginx/cache
 
 ADD ./dockerize /usr/bin/
+ADD ./00-fix-log-permissions.sh /etc/runit/1.d/00-fix-log-permissions
 ADD ./nginx-run.sh /etc/service/nginx/run
+ADD ./unicorn-run.sh /etc/service/unicorn/run
 ADD ./01-nginx.sh /etc/runit/3.d/01-nginx
+ADD ./02-unicorn.sh /etc/runit/3.d/02-unicorn
 ADD docker-entry.sh /docker-entry.sh
 
 RUN chmod +x /usr/bin/dockerize &&\
+    chmod +x /etc/runit/1.d/00-fix-log-permissions &&\
     chmod +x /etc/service/nginx/run &&\
+    chmod +x /etc/service/unicorn/run &&\
     chmod +x /etc/runit/3.d/01-nginx &&\
+    chmod +x /etc/runit/3.d/02-unicorn &&\
     chmod +x /docker-entry.sh &&\
-    touch /var/log/nginx/error.log &&\
-    chown -R www-data:www-data /var/log/nginx &&\
     rm -rf /etc/nginx/sites-enabled/default &&\
-    useradd ${DISCOURSE_SERVICE_USER} -s /bin/bash -m -U &&\
     echo 'gem: --no-document' >> /etc/gemrc &&\
+    useradd ${DISCOURSE_SERVICE_USER} -s /bin/bash -m -U &&\
     chown -R ${DISCOURSE_SERVICE_USER}:${DISCOURSE_SERVICE_GROUP} /var/www/discourse &&\
     gem source --add ${GEM_SOURCE} --remove https://rubygems.org/ &&\
     bundle config mirror.https://rubygems.org ${GEM_SOURCE} &&\
-    sudo -u ${DISCOURSE_SERVICE_USER} sed -i "s#https://rubygems.org#${GEM_SOURCE}#" /var/www/discourse/Gemfile &&\
+    sed -i "s#https://rubygems.org#${GEM_SOURCE}#" /var/www/discourse/Gemfile &&\
     cd /var/www/discourse &&\
     sudo -u discourse bundle install --deployment \
-    --without test --without development &&\
+      --without test --without development &&\
     find /var/www/discourse/vendor/bundle -name tmp -type d -exec rm -rf {} +
 
 USER ${DISCOURSE_SERVICE_USER}

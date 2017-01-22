@@ -18,6 +18,7 @@ fi
 dockerize -wait tcp://${DISCOURSE_DB_HOST}:${DISCOURSE_DB_PORT} \
     -stdout /var/www/discourse/log/unicorn.stdout.log \
     -stderr /var/www/discourse/log/unicorn.stderr.log \
-    bundle exec unicorn -E production -c config/unicorn.conf.rb
+    /sbin/boot
+#    bundle exec unicorn -E production -c config/unicorn.conf.rb
 
 # dockerize -wait tcp://127.0.0.1:${UNICORN_PORT} /usr/sbin/nginx
