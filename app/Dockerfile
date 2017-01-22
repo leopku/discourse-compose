@@ -31,7 +31,6 @@ RUN mkdir -p /etc/service/nginx && \
     mkdir -p /var/nginx/cache
 
 ADD ./dockerize /usr/bin/
-ADD ./00-fix-log-permissions.sh /etc/runit/1.d/00-fix-log-permissions
 ADD ./nginx-run.sh /etc/service/nginx/run
 ADD ./unicorn-run.sh /etc/service/unicorn/run
 ADD ./01-nginx.sh /etc/runit/3.d/01-nginx
@@ -39,7 +38,6 @@ ADD ./02-unicorn.sh /etc/runit/3.d/02-unicorn
 ADD docker-entry.sh /docker-entry.sh
 
 RUN chmod +x /usr/bin/dockerize &&\
-    chmod +x /etc/runit/1.d/00-fix-log-permissions &&\
     chmod +x /etc/service/nginx/run &&\
     chmod +x /etc/service/unicorn/run &&\
     chmod +x /etc/runit/3.d/01-nginx &&\
@@ -57,7 +55,7 @@ RUN chmod +x /usr/bin/dockerize &&\
       --without test --without development &&\
     find /var/www/discourse/vendor/bundle -name tmp -type d -exec rm -rf {} +
 
-USER ${DISCOURSE_SERVICE_USER}
+# USER ${DISCOURSE_SERVICE_USER}
 WORKDIR /var/www/discourse
 
 ENTRYPOINT ["/docker-entry.sh"]
