@@ -62,14 +62,14 @@ BUT when in production, you MUST change `DISCOURSE_SMTP_ADDRESS` setting. You ca
 
 1. Prerequisites
 
-`docker` and `docker-compose` must installed.
+    `docker` and `docker-compose` must installed.
 
 2. Get source code of this project
 
-```
-git clone https://github.com/leopku/discourse-compose.git
-cd discourse-compose
-```
+    ```
+    git clone https://github.com/leopku/discourse-compose.git
+    cd discourse-compose
+    ```
 
 3. Get source code of discourse. Choose ONE way followed,
 
@@ -111,25 +111,25 @@ cd discourse-compose
 
 5. Prepare environment and config files
 
-```
-cp env.example .env
-cp volumes/nginx/nginx.conf.example volumes/nginx/nginx.conf
-cp volumes/nginx/conf.d/discourse.conf.exec volumes/nginx/conf.d/discourse.conf
-```
+    ```
+    cp env.example .env
+    cp volumes/nginx/nginx.conf.example volumes/nginx/nginx.conf
+    cp volumes/nginx/conf.d/discourse.conf.exec volumes/nginx/conf.d/discourse.conf
+    ```
 
-Check every environment variables in IMPORTANT section to meet your actual environment
+    Check every environment variables in IMPORTANT section to meet your actual environment
 
 6. Run
 
-```
-docker-compose up -d
-```
+    ```
+    docker-compose up -d
+    ```
 
 7. Enjoy
 
-Visit http://${YOUR_DOCKER_HOST_IP}:10080 and have fun.
+    Visit http://${YOUR_DOCKER_HOST_IP}:10080 and have fun.
 
-# TODO
+# TODOs
 
 - [ ] Customized config parameter or file for Redis container
 - [ ] Enable brotli
