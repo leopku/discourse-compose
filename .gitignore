@@ -17,6 +17,12 @@ app/source/*
 volumes/*
 !volumes/discourse
 volumes/discourse/*
+!volumes/nginx
+volumes/nginx/*
+!volumes/postgres
+volumes/postgres/*
+!volumes/redis
+volumes/redis/*
 
 !volumes/discourse/plugins
 volumes/discourse/plugins/*
@@ -34,9 +40,13 @@ volumes/discourse/tmp/*
 volumes/discourse/tmp/run/*
 !volumes/discourse/tmp/run/.gitkeep
 
-!volumes/nginx
-volumes/nginx/*
-!volumes/nginx/nginx.conf.example
 !volumes/nginx/conf.d
 volumes/nginx/conf.d/*
-!volumes/nginx/conf.d/discourse.conf.example
+!volumes/nginx/conf.d/discourse.example.conf
+!volumes/nginx/nginx.example.conf
+
+!volumes/postgres/data
+volumes/postgres/data/*
+!volumes/postgres/data/.gitkeep
+
+!volumes/redis/.gitkeep
