@@ -24,8 +24,6 @@ After digging deep into what had offical release done while booting Discourse, I
 
 ## How to make build and run faster?
 
-This is may useful for some place like chinese user in.
-
 - Clone Discourse source code to local and update it frequently.
 - If you are in China, you can clone the source code from one of some mirrors like https://git.coding.net/leopku/discourse.git.
 - If your chose cloning inside container, you can set `DISCOURSE_GIT_REPO` env.
