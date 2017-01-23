@@ -39,7 +39,7 @@ RUN chmod +x /usr/bin/dockerize &&\
     echo 'gem: --no-document' >> /etc/gemrc &&\
     useradd ${DISCOURSE_SERVICE_USER} -s /bin/bash -m -U &&\
     chown -R ${DISCOURSE_SERVICE_USER}:${DISCOURSE_SERVICE_GROUP} /var/www/discourse &&\
-    if [ ${GEM_SOURCE} != "" ]; then \
+    if [ "${GEM_SOURCE}" != "" ]; then \
         gem source --add ${GEM_SOURCE} --remove https://rubygems.org/; \
         bundle config mirror.https://rubygems.org ${GEM_SOURCE}; \
         sed -i "s#https://rubygems.org#${GEM_SOURCE}#" /var/www/discourse/Gemfile; \
