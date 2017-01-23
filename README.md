@@ -32,25 +32,27 @@ After digging deep into what had offical release done while booting Discourse, I
 
 For many guys who first launch this awesome forum, smtp and mail problems may prevent their steps.
 
-So I add a mail container base on [mailhug](https://github.com/mailhug/mailhug) - which is a fake mail server and provides a [webui](http://${YOUR_DOCKER_HOST_IP}:8025) to show recieved emails.
+So I add a mail container base on [mailhog](https://github.com/mailhog/mailhog) - which is a fake mail server and provides a [webui](http://YOUR_DOCKER_HOST_IP:8025) to show recieved emails.
 
 This means you can easily do a preview setup with no actual smtp && email account with my default compose file.
 
 BUT when in production, you MUST change `DISCOURSE_SMTP_ADDRESS` setting. You can also comment the mail container in production.
 
-## How can I add a plugin?
+## How to add a plugin?
 
 1. cd `volumes/discourse/plugins` and put source code of the plugin you desired in this folder
 2. cd `volumes/discourse/tmp/run` and delete these two file `.db_migrated` and `.assets_precompiled`
-3. `docker-compose restart app`. For advanced user, run `docker-compose exec app /bin/bash`, then manualy do db migrate and assets precompiling.
-```
-cd /var/www/discourse
-HOME=/home/discourse USER=discourse exec chpst -u discourse:www-data -U discourse:www-data bundle exec rake db:migrate
-HOME=/home/discourse USER=discourse exec chpst -u discourse:www-data -U discourse:www-data bundle exec rake assets:precompile
-sv restart unicorn
-```
+3. run `docker-compose restart app`.
+    
+    For advanced user, run `docker-compose exec app /bin/bash`, then manualy do db migrate and assets precompiling.
+    ```
+    cd /var/www/discourse
+    HOME=/home/discourse USER=discourse exec chpst -u discourse:www-data -U discourse:www-data bundle exec rake db:migrate
+    HOME=/home/discourse USER=discourse exec chpst -u discourse:www-data -U discourse:www-data bundle exec rake assets:precompile
+    sv restart unicorn
+    ```
 
-## How can I change nginx config
+## How to change nginx config
 
 1. Change config file in `volumes/nginx/nginx.conf` and `volumes/nginx/conf.d/discourse.conf`
 2. `docker-compose exec app /bin/bash`
