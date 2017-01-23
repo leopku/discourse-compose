@@ -40,9 +40,9 @@ RUN chmod +x /usr/bin/dockerize &&\
     useradd ${DISCOURSE_SERVICE_USER} -s /bin/bash -m -U &&\
     chown -R ${DISCOURSE_SERVICE_USER}:${DISCOURSE_SERVICE_GROUP} /var/www/discourse &&\
     if [ ${GEM_SOURCE} != "" ]; then \
-      gem source --add ${GEM_SOURCE} --remove https://rubygems.org/; \
-      bundle config mirror.https://rubygems.org ${GEM_SOURCE}; \
-      sed -i "s#https://rubygems.org#${GEM_SOURCE}#" /var/www/discourse/Gemfile; \
+        gem source --add ${GEM_SOURCE} --remove https://rubygems.org/; \
+        bundle config mirror.https://rubygems.org ${GEM_SOURCE}; \
+        sed -i "s#https://rubygems.org#${GEM_SOURCE}#" /var/www/discourse/Gemfile; \
     fi &&\
     cd /var/www/discourse &&\
     LD_PRELOAD=${RUBY_ALLOCATOR} HOME=/home/discourse USER=discourse exec chpst -u discourse:www-data -U discourse:www-data \

@@ -9,14 +9,19 @@ ASSETS_LOG="/var/www/discourse/tmp/run/.assets_precompiled"
 
 if [ ! -f ${MIGRATION_LOG} ]; then
     echo "start db migrating"
-    dockerize -wait tcp://${DISCOURSE_DB_HOST}:${DISCOURSE_DB_PORT} LD_PRELOAD=${RUBY_ALLOCATOR} HOME=/home/discourse USER=discourse exec chpst -u discourse:www-data -U discourse:www-data bundle exec rake db:migrate 1>${MIGRATION_LOG} 2>&1
+    dockerize -wait tcp://${DISCOURSE_DB_HOST}:${DISCOURSE_DB_PORT} \
+        LD_PRELOAD=${RUBY_ALLOCATOR} HOME=/home/discourse USER=discourse \
+        exec chpst -u discourse:www-data -U discourse:www-data \
+        bundle exec rake db:migrate 1>${MIGRATION_LOG} 2>&1
     echo "finish db migrating"
 fi
 
 if [ ! -f ${ASSETS_LOG} ]; then
-    echo "start compiling assets"
-    LD_PRELOAD=${RUBY_ALLOCATOR} HOME=/home/discourse USER=discourse exec chpst -u discourse:www-data -U discourse:www-data bundle exec rake assets:precompile 1>${ASSETS_LOG} 2>&1
-    echo "finish compiling assets"
+    echo "start assets compiling"
+    LD_PRELOAD=${RUBY_ALLOCATOR} HOME=/home/discourse USER=discourse \
+        exec chpst -u discourse:www-data -U discourse:www-data \
+        bundle exec rake assets:precompile 1>${ASSETS_LOG} 2>&1
+    echo "finish assets compiling"
 fi
 
 dockerize -wait tcp://${DISCOURSE_DB_HOST}:${DISCOURSE_DB_PORT} \
