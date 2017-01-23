@@ -30,10 +30,11 @@ services:
             - .env
         volumes: 
             - /etc/localtime:/etc/localtime:ro
-            - ./volumes/discourse/public:/var/www/discourse/public
+            - ./volumes/discourse/public/assets:/var/www/discourse/public/assets
             - ./volumes/discourse/plugins:/var/www/discourse/plugins
             - ./volumes/nginx/nginx.conf:/etc/nginx/nginx.conf
             - ./volumes/nginx/conf.d/discourse.conf:/etc/nginx/conf.d/discourse.conf
+            - ./volumes/discourse/tmp/run:/var/www/discourse/tmp/run
         links:
             - redis
             - db

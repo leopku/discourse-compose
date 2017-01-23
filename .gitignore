@@ -1,8 +1,13 @@
-
 !.keep
-/app/source/discourse/*
+/app/source/*
+!/volumes/
+
 /volumes/*
 !/volumes/nginx
+/volumes/nginx/**/*.conf
+
+!/volumes/discourse/**/.keep
+!/volumes/discourse/**/**/.keep
 .env
 
 *.tmp

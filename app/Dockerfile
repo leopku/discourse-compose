@@ -4,20 +4,12 @@ FROM discourse/base:1.3.10
 
 MAINTAINER leopku "https://twitter.com/leopku"
 
-ENV DISCOURSE_VERSION 1.7.1
-ENV GEM_SOURCE ${GEM_SOURCE:-https://mirrors.tuna.tsinghua.edu.cn/rubygems/}
-
-ENV DISCOURSE_REDIS_HOST ${DISCOURSE_REDIS_HOST:-redis}
-ENV DISCOURSE_REDIS_PORT ${DISCOURSE_REDIS_PORT:-6379}
-ENV DISCOURSE_DB_HOST ${DISCOURSE_DB_HOST:-db}
-ENV DISCOURSE_DB_PORT ${DISCOURSE_DB_PORT:-5432}
-ENV DISCOURSE_SMTP_HOST ${DISCOURSE_SMTP_HOST:-mail}
-ENV DISCOURSE_SMTP_ADDRESS ${DISCOURSE_SMTP_ADDRESS:-mail}
-ENV DISCOURSE_SMTP_PORT ${DISCOURSE_SMTP_PORT:-1025}
+ENV GEM_SOURCE ${GEM_SOURCE:-""}
 ENV DISCOURSE_SERVICE_USER ${DISCOURSE_SERVICE_USER:-discourse}
 ENV DISCOURSE_SERVICE_GROUP ${DISCOURSE_SERVICE_GROUP:-discourse}
-
 ENV DISCOURSE_SOURCE_PATH ${DISCOURSE_SOURCE_PATH:-"source/discourse"}
+ENV DISCOURSE_VERSION 1.7.1
+# for chinese users https://git.coding.net/leopku/discourse.git could faster than official github repo.
 ENV DISCOURSE_GIT_REPO ${DISCOURSE_GIT_REPO:-https://git.coding.net/leopku/discourse.git}
 
 ########
@@ -47,12 +39,14 @@ RUN chmod +x /usr/bin/dockerize &&\
     echo 'gem: --no-document' >> /etc/gemrc &&\
     useradd ${DISCOURSE_SERVICE_USER} -s /bin/bash -m -U &&\
     chown -R ${DISCOURSE_SERVICE_USER}:${DISCOURSE_SERVICE_GROUP} /var/www/discourse &&\
-    gem source --add ${GEM_SOURCE} --remove https://rubygems.org/ &&\
-    bundle config mirror.https://rubygems.org ${GEM_SOURCE} &&\
-    sed -i "s#https://rubygems.org#${GEM_SOURCE}#" /var/www/discourse/Gemfile &&\
+    if [ ${GEM_SOURCE} != "" ]; then \
+      gem source --add ${GEM_SOURCE} --remove https://rubygems.org/; \
+      bundle config mirror.https://rubygems.org ${GEM_SOURCE}; \
+      sed -i "s#https://rubygems.org#${GEM_SOURCE}#" /var/www/discourse/Gemfile; \
+    fi &&\
     cd /var/www/discourse &&\
-    sudo -u discourse bundle install --deployment \
-      --without test --without development &&\
+    LD_PRELOAD=${RUBY_ALLOCATOR} HOME=/home/discourse USER=discourse exec chpst -u discourse:www-data -U discourse:www-data \
+      bundle install --deployment --without test --without development &&\
     find /var/www/discourse/vendor/bundle -name tmp -type d -exec rm -rf {} +
 
 # USER ${DISCOURSE_SERVICE_USER}
