@@ -10,7 +10,7 @@ ENV DISCOURSE_SERVICE_GROUP ${DISCOURSE_SERVICE_GROUP:-discourse}
 ENV DISCOURSE_SOURCE_PATH ${DISCOURSE_SOURCE_PATH:-"source/discourse"}
 ENV DISCOURSE_VERSION 1.7.1
 # for chinese users https://git.coding.net/leopku/discourse.git could faster than official github repo.
-ENV DISCOURSE_GIT_REPO ${DISCOURSE_GIT_REPO:-https://git.coding.net/leopku/discourse.git}
+ENV DISCOURSE_GIT_REPO ${DISCOURSE_GIT_REPO:-https://github.com/discourse/discourse.git}
 
 ########
 # Uncomment next line for speed up

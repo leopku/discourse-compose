@@ -18,12 +18,20 @@ After digging deep into what had offical release done while booting Discourse, I
 
 * Send a Pull Request with your awesome new features and bug fixes.
 * Be a part of the community and help resolve [issues](https://github.com/leopku/discourse-compose/issues)
-* Support the development of this image with a donation through wechat ![](21485166321.png)
-
+* Support the development of this project with a donation through wechat ![](21485166321.png)
 
 # FAQ
 
-## How can I configure environment of this image
+## How to make build and run faster?
+
+This is may useful for some place like chinese user in.
+
+- Clone Discourse source code to local and update it frequently.
+- If you are in China, you can clone the source code from one of some mirrors like https://git.coding.net/leopku/discourse.git.
+- If your chose cloning inside container, you can set `DISCOURSE_GIT_REPO` env.
+- Use a faster gem source by setting `GEM_SOURCE` env. `https://mirrors.tuna.tsinghua.edu.cn/rubygems/` is a choice for chinese user.
+
+## How to configure environment variables?
 
 1. copy `env.example` to `.env`
 2. modify or add any environment variables as you want
@@ -38,7 +46,7 @@ This means you can easily do a preview setup with no actual smtp && email accoun
 
 BUT when in production, you MUST change `DISCOURSE_SMTP_ADDRESS` setting. You can also comment the mail container in production.
 
-## How to add a plugin?
+## How to add a plugin without rebuilding?
 
 1. cd `volumes/discourse/plugins` and put source code of the plugin you desired in this folder
 2. cd `volumes/discourse/tmp/run` and delete these two file `.db_migrated` and `.assets_precompiled`
@@ -52,7 +60,7 @@ BUT when in production, you MUST change `DISCOURSE_SMTP_ADDRESS` setting. You ca
     sv restart unicorn
     ```
 
-## How to change nginx config
+## How to change nginx config withou rebuilding?
 
 1. Change config file in `volumes/nginx/nginx.conf` and `volumes/nginx/conf.d/discourse.conf`
 2. `docker-compose exec app /bin/bash`
@@ -127,7 +135,7 @@ BUT when in production, you MUST change `DISCOURSE_SMTP_ADDRESS` setting. You ca
 
 7. Enjoy
 
-    Visit http://${YOUR_DOCKER_HOST_IP}:10080 and have fun.
+    Visit http://YOUR_DOCKER_HOST_IP:10080 and have fun.
 
 # TODOs
 
