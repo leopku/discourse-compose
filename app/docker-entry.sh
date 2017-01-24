@@ -1,6 +1,7 @@
 #!/bin/sh
 
 cd /var/www/discourse
+chown -R discourse:discourse tmp
 sudo -u discourse mkdir -p tmp/pids
 sudo -u discourse mkdir -p tmp/run
 
