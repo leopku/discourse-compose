@@ -2,7 +2,11 @@ Discourse for docker compose and rancher compose
 
 https://github.com/leopku/discourse-compose
 
+[![Gitter](https://img.shields.io/gitter/room/leopku/discourse-compose.svg?style=flat-square)](https://gitter.im/discourse-compose/Lobby?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
+
 # WHY this project born?
+
+[![Join the chat at https://gitter.im/leopku/discourse-compose](https://badges.gitter.im/leopku/discourse-compose.svg)](https://gitter.im/leopku/discourse-compose?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 A set of tools for docker were shipped with [offical Discourse docker release](https://github.com/discourse/discourse_docker). It do many things for user to check if Discourse can run correctly in docker and run correctly.
 
@@ -31,8 +35,8 @@ After digging deep into what had offical release done while booting Discourse, I
 
 ## How to configure environment variables?
 
-1. copy `env.example` to `.env`
-2. modify or add any environment variables as you want
+1. Copy `env.example` to `.env`
+2. Modify or add any environment variables as you want
 
 ## What is mail container?
 
@@ -58,7 +62,7 @@ BUT when in production, you MUST change `DISCOURSE_SMTP_ADDRESS` setting. You ca
     sv restart unicorn
     ```
 
-## How to change nginx config withou rebuilding?
+## How to change nginx config without rebuilding?
 
 1. Change config file in `volumes/nginx/nginx.conf` and `volumes/nginx/conf.d/discourse.conf`
 2. `docker-compose exec app /bin/bash`
