@@ -6,8 +6,6 @@ https://github.com/leopku/discourse-compose
 
 # WHY this project born?
 
-[![Join the chat at https://gitter.im/leopku/discourse-compose](https://badges.gitter.im/leopku/discourse-compose.svg)](https://gitter.im/leopku/discourse-compose?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 A set of tools for docker were shipped with [offical Discourse docker release](https://github.com/discourse/discourse_docker). It do many things for user to check if Discourse can run correctly in docker and run correctly.
 
 The main shortcoming of offical release is rebuilding, rebuilding, rebuilding. Anything changed must rebuild Discourse image. Rebuilding would take a so long time and our forum can't serve our users while rebuilding. It is not acceptable for our site.
