@@ -1,4 +1,4 @@
-version: '2.0'
+version: '2'
 
 services:
 
@@ -9,7 +9,7 @@ services:
             - ./volumes/redis:/var/lib/redis:Z
 
     db:
-        image: postgres:9.6
+        image: postgres:9.5.5
         volumes: 
             - /etc/localtime:/etc/localtime:ro
             - ./volumes/postgres/data:/var/lib/postgresql/data:Z
