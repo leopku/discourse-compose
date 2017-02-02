@@ -2,8 +2,7 @@ Discourse for docker compose and rancher compose
 
 https://github.com/leopku/discourse-compose
 
-<!-- badge -->
-<!-- endbadge -->
+[![Gitter](https://img.shields.io/gitter/room/leopku/discourse-compose.svg?style=flat-square)](https://gitter.im/discourse-compose/Lobby?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
 
 # WHY this project born?
 
