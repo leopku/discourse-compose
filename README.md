@@ -122,7 +122,7 @@ BUT when in production, you MUST change `DISCOURSE_SMTP_ADDRESS` setting. You ca
     ```
     cp env.example .env
     cp volumes/nginx/nginx.conf.example volumes/nginx/nginx.conf
-    cp volumes/nginx/conf.d/discourse.conf.exec volumes/nginx/conf.d/discourse.conf
+    cp volumes/nginx/conf.d/discourse.conf.example volumes/nginx/conf.d/discourse.conf
     ```
 
     Check every environment variables in IMPORTANT section to meet your actual environment
